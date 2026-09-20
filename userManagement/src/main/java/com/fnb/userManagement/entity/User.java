@@ -1,10 +1,8 @@
 package com.fnb.userManagement.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,8 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
     private String firstName;
@@ -25,8 +27,7 @@ public class User {
 
     private String email;
 
-    private String password;
-
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private LocalDateTime createdAt;
@@ -37,6 +38,10 @@ public class User {
     protected void onCreate(){
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        if(this.role==null){
+            this.role = Role.ADMIN;
+        }
     }
 
     @PreUpdate
